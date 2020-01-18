@@ -20,12 +20,19 @@ file = open(name_of_file, 'r')                           # Открытие фа
 text = file.read()
 lines = text.splitlines()
 
+
+def progress():
+    end1 = time.time()
+    print('Время выполнения: %.4f' % (end1 - start), 'с.')
+
+
 # Разбор текста на слова
 for line in lines:
     line = line.translate(str.maketrans('', '', string.punctuation))
     temp1 = line.split(' ')
     for word in temp1:
         mass_words.append(word.lower())
+progress()
 
 # Выборка уникальных слов и подсчет их количества
 for word in mass_words:
@@ -37,6 +44,8 @@ for word in mass_words:
             i = mass_valued_words.index(word)
             mass_values[i] += 1
 
+progress()
+
 num_of_word: int = len(mass_values)  # Количество уникальных слов
 all_words = len(mass_words)     # Количество всего слов в тексте
 
@@ -47,6 +56,8 @@ for i in range(num_of_word-1):
             mass_values[j], mass_values[j+1] = mass_values[j+1], mass_values[j]
             mass_valued_words[j], mass_valued_words[j + 1] = mass_valued_words[j + 1], mass_valued_words[j]
             # print(mass_valued_words[j + 1], mass_valued_words[j])
+
+progress()
 
 # Блок вывода всей тестовой хрени
 print('Всего слов в тексте: ', all_words)
