@@ -84,6 +84,7 @@ for i in range(num_of_word):
 
 # Обработка окресностей при помощи частотного метода
 expression = []         # Массив словосочитаний
+weight_exp = []         # Вес словосочитаний
 identicalL = 0          # Идентичные слова слева
 identicalR = 0          # Идентичные слова справа
 numL = 0                # Номер итерации, на которой было обнаружено совпадение слева
@@ -91,35 +92,38 @@ numR = 0                # Номер итерации, на которой бы�
 num = 0                 # Номер итерации вложенного цикла
 
 for i in range(len(mass_of_surroundings)):              # ОБрабатываем Массивы всех окрестностей для каждого слова
-    if identicalL > identicalR:
-        expression.append(mass_of_surroundings[i - 1][numL][0] + ' ')
+    if identicalL > identicalR:  # определяет какое слово имеет больший вес и вписывает его в массив
+        expression.append(mass_of_surroundings[i - 1][numL][0] + ' ' + mass_of_surroundings[i - 1][numL][1])
+        weight_exp.append(identicalL)
     elif identicalL < identicalR:
-        expression.append(mass_of_surroundings[i - 1][numR][2] + ' ')
+        expression.append(mass_of_surroundings[i - 1][numL][1] + ' ' + mass_of_surroundings[i - 1][numR][2] + ' ')
+        weight_exp.append(identicalR)
     elif identicalL == identicalR:
         expression.append(mass_of_surroundings[i - 1][numL][0] + ' ' + mass_of_surroundings[i - 1][numR][2])
-    else:
-        expression.append(mass_of_surroundings[i][num][1])
-    identicalL = 0
+        weight_exp.append(identicalL)
+
+    identicalL = 0      # Обнудение счетчиков
     identicalR = 0
     numL = 0
     numR = 0
     num = 0
-    for j in range(len(mass_of_appearances[i])):        # обрабатываем массивы конкретной окрестности слова
+    for j in range(len(mass_of_appearances[i]) - 1):        # обрабатываем массивы конкретной окрестности слова
         num = j
-        if j == len(mass_of_appearances[i]) - 1:
-            break
-        elif mass_of_surroundings[i][j][0] == mass_of_surroundings[i][j + 1][0]:
+        if mass_of_surroundings[i][j][0] == mass_of_surroundings[i][j + 1][0]:  # Определяет совпадение слов
             identicalL += 1
             numL = j
-        if j == len(mass_of_appearances[i]) - 1:
-            break
-        elif mass_of_surroundings[i][j][2] == mass_of_surroundings[i][j + 1][2]:
+        if mass_of_surroundings[i][j][2] == mass_of_surroundings[i][j + 1][2]:
             identicalR += 1
             numR = j
 
+for i in range(len(expression) - 1):
+        if weight_exp[i] < weight_exp[i + 1]:
+            b = weight_exp[i]
+            expression[i] = expression[i + 1]
+
 
 for i in range(len(expression)):
-    print(expression[i])
+    print(expression[i], ' ', weight_exp[i])
 
 # Блок вывода всей тестовой хрени
 print('Всего слов в тексте: ', all_words)
