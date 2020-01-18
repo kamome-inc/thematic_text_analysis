@@ -92,11 +92,11 @@ num = 0                 # Номер итерации вложенного ци�
 
 for i in range(len(mass_of_surroundings)):              # ОБрабатываем Массивы всех окрестностей для каждого слова
     if identicalL > identicalR:
-        expression.append(mass_of_surroundings[i - 1][numL][0])
+        expression.append(mass_of_surroundings[i - 1][numL][0] + ' ')
     elif identicalL < identicalR:
-        expression.append(mass_of_surroundings[i - 1][numR][2])
+        expression.append(mass_of_surroundings[i - 1][numR][2] + ' ')
     elif identicalL == identicalR:
-        expression.append(mass_of_surroundings[i - 1][numL][0] + mass_of_surroundings[i - 1][numR][2])
+        expression.append(mass_of_surroundings[i - 1][numL][0] + ' ' + mass_of_surroundings[i - 1][numR][2])
     else:
         expression.append(mass_of_surroundings[i][num][1])
     identicalL = 0
@@ -106,15 +106,19 @@ for i in range(len(mass_of_surroundings)):              # ОБрабатывае
     num = 0
     for j in range(len(mass_of_appearances[i])):        # обрабатываем массивы конкретной окрестности слова
         num = j
-        if mass_of_surroundings[i][j][0] == mass_of_surroundings[i][j + 1][0]:
+        if j == len(mass_of_appearances[i]) - 1:
+            break
+        elif mass_of_surroundings[i][j][0] == mass_of_surroundings[i][j + 1][0]:
             identicalL += 1
             numL = j
-        if mass_of_surroundings[i][j][2] == mass_of_surroundings[i][j + 1][2]:
+        if j == len(mass_of_appearances[i]) - 1:
+            break
+        elif mass_of_surroundings[i][j][2] == mass_of_surroundings[i][j + 1][2]:
             identicalR += 1
             numR = j
 
 
-for i in range(expression):
+for i in range(len(expression)):
     print(expression[i])
 
 # Блок вывода всей тестовой хрени
