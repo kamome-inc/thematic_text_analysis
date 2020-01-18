@@ -34,7 +34,7 @@ mass_of_appearances = []    # Верхний массив появлений к�
 
 for word in mass_words:
     if len(word) > min_len_of_word:
-        if mass_valued_words.count(word) != 1:
+        if mass_valued_words.count(word) != 1:      # Проверка на наличие этого слова в массиве слов
             mass_e = [e]
             mass_of_appearances.append(mass_e)
             mass_valued_words.append(word)
@@ -76,24 +76,52 @@ for i in range(num_of_word):
         appear = mass_of_appearances[i][j]
         # specific_surroundings.append(mass_words[appear-2])
         specific_surroundings.append(mass_words[appear-1])
-        # specific_surroundings.append(mass_words[appear])
+        specific_surroundings.append(mass_words[appear])
         specific_surroundings.append(mass_words[appear+1])
         # specific_surroundings.append(mass_words[appear+2])
         mass_specific_surroundings.append(specific_surroundings)
     mass_of_surroundings.append(mass_specific_surroundings)
 
 # Обработка окресностей при помощи частотного метода
-for i in range(len(mass_of_surroundings)): # ОБрабатываем Массивы всех окрестностей для каждого слова
-    mass
-    for j in range(len(mass_of_appearances[i])): # обрабатываем массивы конкретной окрестности слова
-        mass_of_surroundings[i][j][0]
+expression = []         # Массив словосочитаний
+identicalL = 0          # Идентичные слова слева
+identicalR = 0          # Идентичные слова справа
+numL = 0                # Номер итерации, на которой было обнаружено совпадение слева
+numR = 0                # Номер итерации, на которой было обнаружено совпадение справа
+num = 0                 # Номер итерации вложенного цикла
 
+for i in range(len(mass_of_surroundings)):              # ОБрабатываем Массивы всех окрестностей для каждого слова
+    if identicalL > identicalR:
+        expression.append(mass_of_surroundings[i - 1][numL][0])
+    elif identicalL < identicalR:
+        expression.append(mass_of_surroundings[i - 1][numR][2])
+    elif identicalL == identicalR:
+        expression.append(mass_of_surroundings[i - 1][numL][0] + mass_of_surroundings[i - 1][numR][2])
+    else:
+        expression.append(mass_of_surroundings[i][num][1])
+    identicalL = 0
+    identicalR = 0
+    numL = 0
+    numR = 0
+    num = 0
+    for j in range(len(mass_of_appearances[i])):        # обрабатываем массивы конкретной окрестности слова
+        num = j
+        if mass_of_surroundings[i][j][0] == mass_of_surroundings[i][j + 1][0]:
+            identicalL += 1
+            numL = j
+        if mass_of_surroundings[i][j][2] == mass_of_surroundings[i][j + 1][2]:
+            identicalR += 1
+            numR = j
+
+
+for i in range(expression):
+    print(expression[i])
 
 # Блок вывода всей тестовой хрени
 print('Всего слов в тексте: ', all_words)
 print('Уникальных слов в тексте: ', num_of_word)
 print('Коэффициент корректности выделения тематики: %.3f' % (num_of_word/all_words))
-sum = 0
+
 # Вывод информации по количеству использованний уникальных слов и процентного соотношения их к словам текста
 print(' '*12, 'слово', ' '*10, 'Кол-во', ' '*3, '%', ' '*5)
 for i in range(num_of_word):
