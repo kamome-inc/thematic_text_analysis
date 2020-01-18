@@ -28,17 +28,27 @@ for line in lines:
         mass_words.append(word.lower())
 
 # Выборка уникальных слов и подсчет их количества
+e = 0                       # Индексация слов в массиве всех слов
+mass_of_appearances = []    # Верхний массив появлений каждого уникального слова в потоке
+
 for word in mass_words:
     if len(word) > min_len_of_word:
         if mass_valued_words.count(word) != 1:
+            mass_e = [e]
+            mass_of_appearances.append(mass_e)
             mass_valued_words.append(word)
             mass_values.append(1)
         else:
             i = mass_valued_words.index(word)
             mass_values[i] += 1
+            mass_of_appearances[i].append(e)
+    e = e + 1
+
 
 num_of_word: int = len(mass_values)  # Количество уникальных слов
 all_words = len(mass_words)     # Количество всего слов в тексте
+if len(mass_of_appearances) != num_of_word:
+    print("Ты ДОЛБОЕБ")
 
 # Сортировка (Ранжирование) массивов по убыванию количества повторов слова
 for i in range(num_of_word-1):
@@ -46,7 +56,9 @@ for i in range(num_of_word-1):
         if mass_values[j] < mass_values[j+1]:
             mass_values[j], mass_values[j+1] = mass_values[j+1], mass_values[j]
             mass_valued_words[j], mass_valued_words[j + 1] = mass_valued_words[j + 1], mass_valued_words[j]
+            mass_of_appearances[j], mass_of_appearances[j+1] = mass_of_appearances[j+1], mass_of_appearances[j]
             # print(mass_valued_words[j + 1], mass_valued_words[j])
+
 
 # Блок вывода всей тестовой хрени
 print('Всего слов в тексте: ', all_words)
@@ -59,8 +71,9 @@ for i in range(num_of_word):
     if i == number_of_words_in_output:
         break
     coeff = mass_values[i]/all_words*100
-    print('%-30s' % mass_valued_words[i], ' %-6d' % mass_values[i], '%-10.4f' % coeff, '%')
+    print('%-30s' % mass_valued_words[i], ' %-6d' % mass_values[i], '%-10.4f' % coeff, '% ', mass_of_appearances[i])
 
 
 end = time.time()
 print('Время выполнения: %.4f' % (end - start), 'с.')
+
