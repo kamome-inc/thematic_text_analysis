@@ -98,32 +98,30 @@ for i in range(len(mass_of_surroundings)):              # ОБрабатывае
     elif identicalL < identicalR:
         expression.append(mass_of_surroundings[i - 1][numL][1] + ' ' + mass_of_surroundings[i - 1][numR][2] + ' ')
         weight_exp.append(identicalR)
-    elif identicalL == identicalR:
-        expression.append(mass_of_surroundings[i - 1][numL][0] + ' ' + mass_of_surroundings[i - 1][numR][2])
+    elif (identicalL == identicalR) > 1:  # При равенстве веса, отличного от нуля, то словосоч. записывается в массив
+        expression.append(mass_of_surroundings[i - 1][numL][0] + ' ' + mass_of_surroundings[i - 1][numR][1] +
+                          mass_of_surroundings[i - 1][numR][2])
         weight_exp.append(identicalL)
 
-    identicalL = 0      # Обнудение счетчиков
+    identicalL = 0      # Обнуление счетчиков
     identicalR = 0
     numL = 0
     numR = 0
-    num = 0
     for j in range(len(mass_of_appearances[i]) - 1):        # обрабатываем массивы конкретной окрестности слова
-        num = j
-        if mass_of_surroundings[i][j][0] == mass_of_surroundings[i][j + 1][0]:  # Определяет совпадение слов
+        if mass_of_surroundings[i][j][0] == mass_of_surroundings[i][j + 1][0]:  # Определяет совпадение слов слева
             identicalL += 1
             numL = j
-        if mass_of_surroundings[i][j][2] == mass_of_surroundings[i][j + 1][2]:
+        if mass_of_surroundings[i][j][2] == mass_of_surroundings[i][j + 1][2]:  # Определяет совпадение слов слева
             identicalR += 1
             numR = j
 
-for i in range(len(expression) - 1):
-        if weight_exp[i] < weight_exp[i + 1]:
-            b = weight_exp[i]
-            expression[i] = expression[i + 1]
+# Сортировка (Ранжирование) словосочитаний по их весу
+for i in range(len(weight_exp)-1):
+    for j in range(len(weight_exp)-i-1):
+        if weight_exp[j] < weight_exp[j+1]:
+            weight_exp[j], weight_exp[j+1] = weight_exp[j+1], weight_exp[j]
+            expression[j], expression[j + 1] = expression[j + 1], expression[j]
 
-
-for i in range(len(expression)):
-    print(expression[i], ' ', weight_exp[i])
 
 # Блок вывода всей тестовой хрени
 print('Всего слов в тексте: ', all_words)
@@ -131,12 +129,13 @@ print('Уникальных слов в тексте: ', num_of_word)
 print('Коэффициент корректности выделения тематики: %.3f' % (num_of_word/all_words))
 
 # Вывод информации по количеству использованний уникальных слов и процентного соотношения их к словам текста
-print(' '*12, 'слово', ' '*10, 'Кол-во', ' '*3, '%', ' '*5)
-for i in range(num_of_word):
+print(' '*8, 'слово', ' '*13, 'Словосочетание', ' '*3, 'Вес словосоч.', ' ', 'Вес слов', ' '*2, '%')
+for i in range(len(expression)):
     if i == number_of_words_in_output:
         break
     coeff = mass_values[i]/all_words*100
-    print('%-30s' % mass_valued_words[i], ' %-6d' % mass_values[i], '%-10.4f' % coeff, '% ', mass_of_surroundings[i])
+    print('%-25s' % mass_valued_words[i], '%-25s' % expression[i], ' ', '%-11s' % weight_exp[i],
+          ' %-6d' % mass_values[i], '%-10.4f' % coeff, '% ', mass_of_surroundings[i])
 
 
 end = time.time()
