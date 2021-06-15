@@ -56,16 +56,28 @@ def texting(name_of_file):
                 mass_values[j], mass_values[j+1] = mass_values[j+1], mass_values[j]
                 mass_valued_words[j], mass_valued_words[j + 1] = mass_valued_words[j + 1], mass_valued_words[j]
                 mass_of_appearances[j], mass_of_appearances[j+1] = mass_of_appearances[j+1], mass_of_appearances[j]
-                # print(mass_valued_words[j + 1], mass_valued_words[j])
 
-    #for i in range(num_of_word-1):
-        #print(mass_valued_words[i], "   ", mass_values[i])
+    mass_valued_words = mass_valued_words[:10000]
+    mass_values = mass_values[:10000]
+
+    mass_surraundlings = []
+    for i in range(len(mass_valued_words)):
+        surr_i = []
+        for ind in mass_of_appearances[i]:
+            if r+1 < ind < len(mass_valued_words)-r-1:
+                # крайние слова не ищу
+                # Добавление не цикличное, прописывать ручками
+                surr_i.append(mass_words[ind - 2])
+                surr_i.append(mass_words[ind - 1])
+                surr_i.append(mass_words[ind + 1])
+                surr_i.append(mass_words[ind + 2])
+        mass_surraundlings.append(surr_i)
 
     print(len(mass_words))
-    return mass_valued_words[:10000], mass_values[:10000], len(mass_words)
+    return mass_valued_words, mass_values, len(mass_words), mass_surraundlings
 
 
-D = [#r'temo\2 — копия (1).txt', r'temo\2 — копия (2).txt', r'temo\2 — копия (3).txt', r'temo\2 — копия (4).txt',
+D = [r'temo\22.txt', r'temo\23.txt', r'temo\2 — копия (1).txt', r'temo\2 — копия (2).txt', r'temo\2 — копия (3).txt', r'temo\2 — копия (4).txt',
      r'temo\2 — копия (5).txt', r'temo\2 — копия (6).txt', r'temo\2 — копия (7).txt', r'temo\2 — копия (8).txt',
      r'temo\2 — копия (9).txt', r'temo\2 — копия (10).txt']
 
@@ -73,12 +85,14 @@ MMM_words = []
 MMM_values = []
 MMM_len_text = []
 MMM_new_values = []
+MMM_surraundlings = []
 for d in D:
     print(d)
-    m_words1, m_values1, len_text1 = texting(d)
+    m_words1, m_values1, len_text1, surraundlings = texting(d)
     MMM_words.append(m_words1)
     MMM_values.append(m_values1)
     MMM_len_text.append(len_text1)
+    MMM_surraundlings.append(surraundlings)
 
 
 def find_a_docs(word):
@@ -103,6 +117,7 @@ for j in range(len(MMM_words)):
             IDF = math.log10(len(D)/find_a_docs(Words[i]))
         except:
             IDF = 1
+
         New_values.append(TF*IDF)
     MMM_new_values.append(New_values)
 
@@ -112,17 +127,23 @@ def two_text_analize(id_doc1, id_doc2):
     m_new_values2 = MMM_new_values[id_doc2]
     m_words2 = MMM_words[id_doc2]
     m_new_values1 = MMM_new_values[id_doc1]
+    surr1 = MMM_surraundlings[id_doc1]
+    surr2 = MMM_surraundlings[id_doc2]
     p = 0
     for i in range(len(m_words1)):
+
         try:
             try:
-                s = m_new_values2[m_words2.index(m_words1[i])]
+                index2 = m_words2.index(m_words1[i])
+                s = m_new_values2[index2]
+                n = (len(set(surr1[i]) & set(surr2[index2]))*2)/(len(surr1[i])+len(surr2[index2]))
             except ValueError:
                 s = 0
+                n = 0
             if m_new_values1[i] >= s:
-                p = p + ((s / m_new_values1[i]) * m_new_values1[i])
+                p = p + ((s / m_new_values1[i]) * m_new_values1[i])*n
             else:
-                p = p + ((m_new_values1[i] / s) * m_new_values1[i])
+                p = p + ((m_new_values1[i] / s) * m_new_values1[i])*n
         except ZeroDivisionError:
             p += 0
     return p
