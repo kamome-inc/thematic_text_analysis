@@ -70,7 +70,7 @@ for i in range(num_of_word):
     if i == number_of_words_in_output:
         break
     coeff = mass_values[i]/all_words*100
-    print('%-30s' % mass_valued_words[i], ' %-6d' % mass_values[i], '%-10.4f' % coeff, '%')
+    print('%-30s' % mass_valued_words[i], ' %-6d' % mass_values[i], '% 10.4f' % coeff, '%')
 
 
 end = time.time()

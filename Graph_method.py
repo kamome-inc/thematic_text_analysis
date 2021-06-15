@@ -136,7 +136,7 @@ for i in range(len(expression)):
         break
     coeff = mass_values[i]/all_words*100
     print('%-25s' % mass_valued_words[i], '%-25s' % expression[i], ' ', '%-11s' % weight_exp[i],
-          ' %-6d' % mass_values[i], '%-10.4f' % coeff, '% ')
+          ' %-6d' % mass_values[i], '% 10.4f' % coeff, '% ')
     f.write(mass_valued_words[i] + '->' + str(expression[i]) + '|вес словосочитания ->' + str(weight_exp[i])
             + '|вес слова ->' + str(mass_values[i]) + '|уникальность слова ->' + str(coeff) + '%' + '\n')
 
